@@ -57,6 +57,17 @@ def notes_create():
 
     return flask.redirect(flask.url_for("index"))
 
+@app.route("/notes/<int:note_id>/delete",methods=["POST"])
+def notes_delete(note_id):
+    db = models.db
+    note = db.session.get(models.Note, note_id)
+    if note:
+        db.session.delete(note)
+        db.session.commit()
+        print("Note deleted successfully", "success")
+    else:
+        print("Note not found", "error")
+    return flask.redirect(flask.url_for("index"))
 
 @app.route("/tags/<tag_name>")
 def tags_view(tag_name):
@@ -75,7 +86,6 @@ def tags_view(tag_name):
         tag_name=tag_name,
         notes=notes,
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)
